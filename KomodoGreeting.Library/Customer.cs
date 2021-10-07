@@ -11,7 +11,7 @@ namespace KomodoGreeting.Library
         public int ID { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string FullName { get; }
+        public string FullName { get; set; }
         public CustomerType Type { get; set; }
         public enum CustomerType
         {

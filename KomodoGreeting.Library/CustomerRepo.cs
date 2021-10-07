@@ -8,14 +8,13 @@ namespace KomodoGreeting.Library
 {
     public class CustomerRepo
     {
-        Random random = new Random();
         List<Customer> _listOfCustomers = new List<Customer>();
         public void AddToList(Customer c)
         {
+            int id = 1000;
             bool loop = true;
             while (loop)
             {
-                int id = random.Next(1000, 10000);
                 bool unique = true;
                 foreach(Customer customer in _listOfCustomers)
                 {
@@ -27,6 +26,7 @@ namespace KomodoGreeting.Library
                     _listOfCustomers.Add(c);
                     loop = false;
                 }
+                else { id++; }
             }
         }
         public List<Customer> GetList()
@@ -48,6 +48,7 @@ namespace KomodoGreeting.Library
             {
                 customer.FirstName = fName;
                 customer.LastName = lName;
+                customer.FullName = customer.FirstName + " " + customer.LastName;
                 customer.Type = type;
                 return true;
             }
