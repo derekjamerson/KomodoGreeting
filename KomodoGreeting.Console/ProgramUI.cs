@@ -19,7 +19,9 @@ namespace KomodoGreeting.Console
                 System.Console.Write("\n\n\n");
                 PrintCustomers(-1);
                 System.Console.SetCursorPosition(0, toTopMainMenu);
-                int mainMenu = AskMainMenu();
+                List<string> _mainMenu = new List<string>() { "Add New", "Update Existing", "Remove Existing", "Exit Application" };
+                System.Console.Write(" Main Menu:  ");
+                int mainMenu = AskMenu(_mainMenu);
                 switch (mainMenu)
                 {
                     case 0:
@@ -135,25 +137,25 @@ namespace KomodoGreeting.Console
                     return new string(' ', System.Console.WindowWidth);
             }
         }
-        public int AskMainMenu()
+        public int AskMenu(List<string> _options)
         {
             System.Console.CursorVisible = false;
-            List<string> _mainMenuOptions = new List<string>() { "Add New", "Update Existing", "Remove Existing", "Exit Application" };
+            int toLeft = System.Console.CursorLeft;
+            int toTop = System.Console.CursorTop;
             int selection = 0;
             while (true)
             {
-                System.Console.SetCursorPosition(0, System.Console.CursorTop);
-                System.Console.Write(" Menu Action:   ");
-                for (int i = 0; i < _mainMenuOptions.Count; i++)
+                System.Console.SetCursorPosition(toLeft, toTop);
+                for (int i = 0; i < _options.Count; i++)
                 {
                     if(selection == i)
                     {
                         System.Console.BackgroundColor = ConsoleColor.White;
                         System.Console.ForegroundColor = ConsoleColor.Black;
                     }
-                    System.Console.Write(_mainMenuOptions[i]);
+                    System.Console.Write(_options[i]);
                     System.Console.ResetColor();
-                    if(i != _mainMenuOptions.Count - 1)
+                    if(i != _options.Count - 1)
                     {
                         System.Console.Write("  -  ");
                     }
@@ -167,7 +169,7 @@ namespace KomodoGreeting.Console
                         }
                         break;
                     case ConsoleKey.RightArrow:
-                        if(selection < _mainMenuOptions.Count - 1)
+                        if(selection < _options.Count - 1)
                         {
                             selection++;
                         }
@@ -188,7 +190,13 @@ namespace KomodoGreeting.Console
             System.Console.Write(" Last Name: ");
             string lName = System.Console.ReadLine();
             ClearLine(toTop);
-            Customer.CustomerType cType = AskEnum();
+            System.Console.Write(" Type: ");
+            List<string> _types = new List<string>();
+            foreach(Customer.CustomerType x in Customer.CustomerType)
+            {
+                _types.Add(x.ToString());
+            }
+            Customer.CustomerType cType = AskMenu(_types);
         }
         public void ClearLine(int toTop)
         {

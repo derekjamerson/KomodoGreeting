@@ -15,7 +15,7 @@ namespace KomodoGreeting.Library
         public CustomerType Type { get; set; }
         public enum CustomerType
         {
-            Past = 1,
+            Past,
             Current,
             Potential
         }
