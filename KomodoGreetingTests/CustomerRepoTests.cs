@@ -32,12 +32,12 @@ namespace KomodoGreetingTests
         [TestMethod]
         public void GetCustomer_CustomerDoesNotExist_True()
         {
-            Assert.IsNull(repo.GetCustomer(1));
+            Assert.IsNull(repo.GetCustomer(-1));
         }
         [TestMethod]
         public void UpdateCustomer_CustomerDoesNotExist_True()
         {
-            Assert.IsFalse(repo.UpdateCustomer(1, "first", "last", Customer.CustomerType.Past));
+            Assert.IsFalse(repo.UpdateCustomer(-1, "first", "last", Customer.CustomerType.Past));
         }
         [TestMethod]
         public void UpdateCustomer_CustomerDoesExist_True()

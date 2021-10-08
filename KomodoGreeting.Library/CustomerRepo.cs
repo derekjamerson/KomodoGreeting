@@ -11,7 +11,7 @@ namespace KomodoGreeting.Library
         List<Customer> _listOfCustomers = new List<Customer>();
         public void AddToList(Customer c)
         {
-            int id = 1000;
+            int id = 1;
             bool loop = true;
             while (loop)
             {
