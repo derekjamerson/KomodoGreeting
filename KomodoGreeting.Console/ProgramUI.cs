@@ -16,7 +16,9 @@ namespace KomodoGreeting.Console
             {
                 PrintTitle();
                 int toTopMainMenu = System.Console.CursorTop;
-                System.Console.Write("\n\n\n");
+                System.Console.Write("\n");
+                System.Console.Write(new string('_', System.Console.WindowWidth) + "\n");
+                int toTopCustomers = System.Console.CursorTop;
                 PrintCustomers(-1);
                 System.Console.SetCursorPosition(0, toTopMainMenu);
                 List<string> _mainMenu = new List<string>() { "Add New", "Update Existing", "Remove Existing", "Exit Application" };
@@ -28,10 +30,10 @@ namespace KomodoGreeting.Console
                         DoAddOption();
                         break;
                     case 1:
-                        DoUpdateOption();
+                        DoUpdateOption(toTopMainMenu, toTopCustomers);
                         break;
                     case 2:
-                        DoRemoveOption();
+                        //DoRemoveOption();
                         break;
                     case 3:
                         System.Environment.Exit(0);
@@ -110,7 +112,7 @@ namespace KomodoGreeting.Console
             string h2 = "Last Name";
             string h3 = "Type";
             string h4 = "Email";
-            System.Console.Write(String.Format("|{0,-12}|{1,-12}|{2,-12}|", h1, h2, h3) + h4 + "\n\n");
+            System.Console.Write(String.Format("|{0,-12}|{1,-12}|{2,-12}|", h1, h2, h3) + h4 + "\n\n\n");
             for (int i = 0; i < _list.Count; i++)
             {
                 Customer c = repo.GetList()[i];
@@ -181,6 +183,66 @@ namespace KomodoGreeting.Console
         }
         public void DoAddOption()
         {
+            int toTop = System.Console.CursorTop;
+            Customer c = AskCustomer();
+            System.Console.Write(String.Format("|{0,-12}|{1,-12}|{2,-12}|", c.FirstName, c.LastName, c.Type) + "  Add this Customer?: ");
+            List<string> _yesNo = new List<string>() { "Yes", "No" };
+            int confirm = AskMenu(_yesNo);
+            if(confirm == 0)
+            {
+                repo.AddToList(c);
+                ClearLine(toTop);
+                System.Console.Write(" Customer successfully added.");
+                System.Threading.Thread.Sleep(3000);
+            }
+            else
+            {
+                ClearLine(toTop);
+                System.Console.Write(" Customer was NOT added.");
+                System.Threading.Thread.Sleep(3000);
+            }
+
+        }
+        public void ClearLine(int toTop)
+        {
+            System.Console.SetCursorPosition(0, toTop);
+            System.Console.Write(new string(' ', System.Console.WindowWidth));
+            System.Console.SetCursorPosition(0, toTop);
+        }
+        public void DoUpdateOption(int toTopMainMenu, int toTopCustomers)
+        {
+            System.Console.SetCursorPosition(0, toTopCustomers);
+            Customer oldC = PickCustomer();
+            Customer newC = AskCustomer();
+            ClearLine(toTopMainMenu);
+            System.Console.Write(String.Format("|{0,-12}|{1,-12}|{2,-12}|", newC.FirstName, newC.LastName, newC.Type) + "  Update Customer using these details?: ");
+            List<string> _yesNo = new List<string>() { "Yes", "No" };
+            int yesNo = AskMenu(_yesNo);
+            if (yesNo == 0)
+            {
+                bool updated = repo.UpdateCustomer(oldC.ID, newC);
+                if (updated)
+                {
+                    ClearLine(toTopMainMenu);
+                    System.Console.Write(" Customer updated successfully.");
+                    System.Threading.Thread.Sleep(3000);
+                }
+                else
+                {
+                    ClearLine(toTopMainMenu);
+                    System.Console.Write(" Customer NOT updated.");
+                    System.Threading.Thread.Sleep(3000);
+                }
+            }
+            else
+            {
+                ClearLine(toTopMainMenu);
+                System.Console.Write(" Customer NOT updated.");
+                System.Threading.Thread.Sleep(3000);
+            }
+        }
+        public Customer AskCustomer()
+        {
             System.Console.CursorVisible = true;
             int toTop = System.Console.CursorTop;
             ClearLine(toTop);
@@ -192,17 +254,71 @@ namespace KomodoGreeting.Console
             ClearLine(toTop);
             System.Console.Write(" Type: ");
             List<string> _types = new List<string>();
-            foreach(Customer.CustomerType x in Customer.CustomerType)
+            foreach (string name in Enum.GetNames(typeof(Customer.CustomerType)))
             {
-                _types.Add(x.ToString());
+                _types.Add(name);
             }
-            Customer.CustomerType cType = AskMenu(_types);
+            Customer.CustomerType cType = (Customer.CustomerType)AskMenu(_types);
+            Customer c = new Customer(fName, lName, cType);
+            ClearLine(toTop);
+            return c;
         }
-        public void ClearLine(int toTop)
+        public Customer PickCustomer()
         {
-            System.Console.SetCursorPosition(0, toTop);
-            System.Console.Write(new string(' ', System.Console.WindowWidth));
-            System.Console.SetCursorPosition(0, toTop);
+            System.Console.CursorVisible = false;
+            int selection = 0;
+            while (true)
+            {
+                PrintCustomers(selection);
+                switch (System.Console.ReadKey(true).Key)
+                {
+                    case ConsoleKey.DownArrow:
+                        if(selection < repo.GetList().Count - 1)
+                        {
+                            selection++;
+                        }
+                        break;
+                    case ConsoleKey.UpArrow:
+                        if(selection > 0)
+                        {
+                            selection--;
+                        }
+                        break;
+                    case ConsoleKey.Enter:
+                        return repo.GetList()[selection];
+                }
+            }
+        }
+        public void DoRemoveOption(int toTopMainMenu, int toTopCustomers)
+        {
+            System.Console.SetCursorPosition(0, toTopCustomers);
+            Customer customer = PickCustomer();
+            ClearLine(toTopMainMenu);
+            System.Console.Write(" Remove Customer?: ");
+            List<string> _yesNo = new List<string>() { "Yes", "No" };
+            int yesNo = AskMenu(_yesNo);
+            if (yesNo == 0)
+            {
+                bool removed = repo.RemoveCustomer(customer.ID);
+                if (removed)
+                {
+                    ClearLine(toTopMainMenu);
+                    System.Console.Write(" Customer removed successfully.");
+                    System.Threading.Thread.Sleep(3000);
+                }
+                else
+                {
+                    ClearLine(toTopMainMenu);
+                    System.Console.Write(" Customer NOT removed.");
+                    System.Threading.Thread.Sleep(3000);
+                }
+            }
+            else
+            {
+                ClearLine(toTopMainMenu);
+                System.Console.Write(" Customer NOT removed.");
+                System.Threading.Thread.Sleep(3000);
+            }
         }
     }
 }

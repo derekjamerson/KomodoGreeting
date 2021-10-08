@@ -31,7 +31,7 @@ namespace KomodoGreeting.Library
         }
         public List<Customer> GetList()
         {
-            return _listOfCustomers;
+            return _listOfCustomers.OrderBy(Customer => Customer.LastName).ToList();
         }
         public Customer GetCustomer(int id)
         {
@@ -41,15 +41,15 @@ namespace KomodoGreeting.Library
             }
             return null;
         }
-        public bool UpdateCustomer(int id, string fName, string lName, Customer.CustomerType type)
+        public bool UpdateCustomer(int id, Customer newC)
         {
             Customer customer = GetCustomer(id);
             if(customer != null)
             {
-                customer.FirstName = fName;
-                customer.LastName = lName;
+                customer.FirstName = newC.FirstName;
+                customer.LastName = newC.LastName;
                 customer.FullName = customer.FirstName + " " + customer.LastName;
-                customer.Type = type;
+                customer.Type = newC.Type;
                 return true;
             }
             return false;
