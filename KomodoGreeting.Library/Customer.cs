@@ -21,8 +21,8 @@ namespace KomodoGreeting.Library
         }
         public Customer(string first, string last, CustomerType type)
         {
-            FirstName = first;
-            LastName = last;
+            FirstName = first.Substring(0, 12);
+            LastName = last.Substring(0, 12);
             FullName = FirstName + " " + LastName;
             Type = type;
         }

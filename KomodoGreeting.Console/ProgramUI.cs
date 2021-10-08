@@ -99,10 +99,36 @@ namespace KomodoGreeting.Console
         }
         public void DoMainMenu(int selection)
         {
+            int toTop = 6 + (selection + 1) * 2;
             if(selection != -1)
             {
-
+                Update();
             }
+            else
+            {
+                AddNew();
+            }
+        }
+        public void Update()
+        {
+
+        }
+        public void AddNew()
+        {
+            int toLeft = 0;
+            int toTop = System.Console.CursorTop;
+            System.Console.CursorVisible = true;
+            System.Console.Write(String.Format("|{0,-12}|{1,-12}|{2,-12}|", "", "Last Name", "Type"));
+            string fName = System.Console.ReadLine().Substring(0, 12);
+            System.Console.SetCursorPosition(0, toTop);
+            System.Console.Write(String.Format("|{0,-12}|{1,-12}|{2,-12}|", fName, "", "Type"));
+            System.Console.SetCursorPosition(14, toTop);
+            string lName = System.Console.ReadLine().Substring(0, 12);
+            System.Console.SetCursorPosition(0, toTop);
+            System.Console.Write(String.Format("|{0,-12}|{1,-12}|{2,-12}|", fName, lName, ""));
+
+
+
         }
     }
 }
