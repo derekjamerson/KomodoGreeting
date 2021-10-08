@@ -14,74 +14,112 @@ namespace KomodoGreeting.Console
         {
             while (true)
             {
-                PrintMainMenu();
-            }
-        }
-        public void PrintMainMenu()
-        {
-            System.Console.CursorVisible = false;
-            PrintTitle();
-            string aNew = " Add new Customer";
-            int selection = -1;
-            bool loop = true;
-            List<Customer> _list = repo.GetList();
-            string h1 = "First Name";
-            string h2 = "Last Name";
-            string h3 = "Type";
-            string h4 = "Email";
-            System.Console.Write(String.Format("|{0,-12}|{1,-12}|{2,-12}|", h1, h2, h3) + h4 + "\n\n");
-            while (loop)
-            {
-                if(selection == -1)
+                PrintTitle();
+                int toTopMainMenu = System.Console.CursorTop;
+                System.Console.Write("\n\n\n");
+                PrintCustomers(-1);
+                System.Console.SetCursorPosition(0, toTopMainMenu);
+                int mainMenu = AskMainMenu();
+                switch (mainMenu)
                 {
-                    System.Console.BackgroundColor = ConsoleColor.White;
-                    System.Console.ForegroundColor = ConsoleColor.Black;
-                }
-                System.Console.Write(aNew + new string(' ', System.Console.WindowWidth - aNew.Length) + "\n\n");
-                System.Console.ResetColor();
-                for(int i = 0; i < _list.Count; i++)
-                {
-                    Customer c = repo.GetList()[i];
-                    if(selection == i)
-                    {
-                        System.Console.BackgroundColor = ConsoleColor.White;
-                        System.Console.ForegroundColor = ConsoleColor.Black;
-                    }
-                    System.Console.Write(String.Format("|{0,-12}|{1,-12}|{2,-12}|", c.FirstName, c.LastName, c.Type) + PrintEmail(c.Type) + "\n\n");
-                    System.Console.ResetColor();
-                }
-                switch (System.Console.ReadKey(true).Key)
-                {
-                    case ConsoleKey.UpArrow:
-                        if(selection > -1)
-                        {
-                            selection--;
-                        }
+                    case 0:
+                        DoAddOption();
                         break;
-                    case ConsoleKey.DownArrow:
-                        if(selection < _list.Count - 1)
-                        {
-                            selection++;
-                        }
+                    case 1:
+                        DoUpdateOption();
                         break;
-                    case ConsoleKey.Escape:
+                    case 2:
+                        DoRemoveOption();
+                        break;
+                    case 3:
                         System.Environment.Exit(0);
                         break;
-                    case ConsoleKey.Enter:
-                        DoMainMenu(selection);
-                        loop = false;
-                        break;
                 }
-                System.Console.ReadLine();
-                
             }
         }
+        //public void HoldCodeThatIMightNeed()
+        //{
+        //    string aNew = " Add new Customer";
+        //    int selection = -1;
+        //    bool loop = true;
+        //    List<Customer> _list = repo.GetList();
+        //    string h1 = "First Name";
+        //    string h2 = "Last Name";
+        //    string h3 = "Type";
+        //    string h4 = "Email";
+        //    System.Console.Write(String.Format("|{0,-12}|{1,-12}|{2,-12}|", h1, h2, h3) + h4 + "\n\n");
+        //    while (loop)
+        //    {
+        //        if (selection == -1)
+        //        {
+        //            System.Console.BackgroundColor = ConsoleColor.White;
+        //            System.Console.ForegroundColor = ConsoleColor.Black;
+        //        }
+        //        System.Console.Write(aNew + new string(' ', System.Console.WindowWidth - aNew.Length) + "\n\n");
+        //        System.Console.ResetColor();
+        //        for (int i = 0; i < _list.Count; i++)
+        //        {
+        //            Customer c = repo.GetList()[i];
+        //            if (selection == i)
+        //            {
+        //                System.Console.BackgroundColor = ConsoleColor.White;
+        //                System.Console.ForegroundColor = ConsoleColor.Black;
+        //            }
+        //            System.Console.Write(String.Format("|{0,-12}|{1,-12}|{2,-12}|", c.FirstName, c.LastName, c.Type) + PrintEmail(c.Type) + "\n\n");
+        //            System.Console.ResetColor();
+        //        }
+        //        switch (System.Console.ReadKey(true).Key)
+        //        {
+        //            case ConsoleKey.UpArrow:
+        //                if (selection > -1)
+        //                {
+        //                    selection--;
+        //                }
+        //                break;
+        //            case ConsoleKey.DownArrow:
+        //                if (selection < _list.Count - 1)
+        //                {
+        //                    selection++;
+        //                }
+        //                break;
+        //            case ConsoleKey.Escape:
+        //                System.Environment.Exit(0);
+        //                break;
+        //            case ConsoleKey.Enter:
+        //                DoMainMenu(selection);
+        //                loop = false;
+        //                break;
+        //        }
+        //        System.Console.ReadLine();
+
+        //    }
+        //}
         public void PrintTitle()
         {
             System.Console.Clear();
             string title = "Komodo Greeting Application";
             System.Console.WriteLine(string.Format("{0," + ((System.Console.WindowWidth / 2) + (title.Length / 2)) + "}", title));
             System.Console.WriteLine("\n");
+        }
+        public void PrintCustomers(int selection)
+        {
+            List<Customer> _list = repo.GetList();
+            string h1 = "First Name";
+            string h2 = "Last Name";
+            string h3 = "Type";
+            string h4 = "Email";
+            System.Console.Write(String.Format("|{0,-12}|{1,-12}|{2,-12}|", h1, h2, h3) + h4 + "\n\n");
+            for (int i = 0; i < _list.Count; i++)
+            {
+                Customer c = repo.GetList()[i];
+                if (selection == i)
+                {
+                    System.Console.BackgroundColor = ConsoleColor.White;
+                    System.Console.ForegroundColor = ConsoleColor.Black;
+                }
+                System.Console.Write(String.Format("|{0,-12}|{1,-12}|{2,-12}|", c.FirstName, c.LastName, c.Type) + PrintEmail(c.Type) + "\n\n");
+                System.Console.ResetColor();
+            }
         }
         public string PrintEmail(Customer.CustomerType type)
         {
@@ -97,38 +135,66 @@ namespace KomodoGreeting.Console
                     return new string(' ', System.Console.WindowWidth);
             }
         }
-        public void DoMainMenu(int selection)
+        public int AskMainMenu()
         {
-            int toTop = 6 + (selection + 1) * 2;
-            if(selection != -1)
+            System.Console.CursorVisible = false;
+            List<string> _mainMenuOptions = new List<string>() { "Add New", "Update Existing", "Remove Existing", "Exit Application" };
+            int selection = 0;
+            while (true)
             {
-                Update();
-            }
-            else
-            {
-                AddNew();
+                System.Console.SetCursorPosition(0, System.Console.CursorTop);
+                System.Console.Write(" Menu Action:   ");
+                for (int i = 0; i < _mainMenuOptions.Count; i++)
+                {
+                    if(selection == i)
+                    {
+                        System.Console.BackgroundColor = ConsoleColor.White;
+                        System.Console.ForegroundColor = ConsoleColor.Black;
+                    }
+                    System.Console.Write(_mainMenuOptions[i]);
+                    System.Console.ResetColor();
+                    if(i != _mainMenuOptions.Count - 1)
+                    {
+                        System.Console.Write("  -  ");
+                    }
+                }
+                switch (System.Console.ReadKey(true).Key)
+                {
+                    case ConsoleKey.LeftArrow:
+                        if(selection > 0)
+                        {
+                            selection--;
+                        }
+                        break;
+                    case ConsoleKey.RightArrow:
+                        if(selection < _mainMenuOptions.Count - 1)
+                        {
+                            selection++;
+                        }
+                        break;
+                    case ConsoleKey.Enter:
+                        return selection;
+                }
             }
         }
-        public void Update()
+        public void DoAddOption()
         {
-
-        }
-        public void AddNew()
-        {
-            int toLeft = 0;
-            int toTop = System.Console.CursorTop;
             System.Console.CursorVisible = true;
-            System.Console.Write(String.Format("|{0,-12}|{1,-12}|{2,-12}|", "", "Last Name", "Type"));
-            string fName = System.Console.ReadLine().Substring(0, 12);
+            int toTop = System.Console.CursorTop;
+            ClearLine(toTop);
+            System.Console.Write(" First Name: ");
+            string fName = System.Console.ReadLine();
+            ClearLine(toTop);
+            System.Console.Write(" Last Name: ");
+            string lName = System.Console.ReadLine();
+            ClearLine(toTop);
+            Customer.CustomerType cType = AskEnum();
+        }
+        public void ClearLine(int toTop)
+        {
             System.Console.SetCursorPosition(0, toTop);
-            System.Console.Write(String.Format("|{0,-12}|{1,-12}|{2,-12}|", fName, "", "Type"));
-            System.Console.SetCursorPosition(14, toTop);
-            string lName = System.Console.ReadLine().Substring(0, 12);
+            System.Console.Write(new string(' ', System.Console.WindowWidth));
             System.Console.SetCursorPosition(0, toTop);
-            System.Console.Write(String.Format("|{0,-12}|{1,-12}|{2,-12}|", fName, lName, ""));
-
-
-
         }
     }
 }
