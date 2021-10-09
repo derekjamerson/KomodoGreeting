@@ -37,13 +37,15 @@ namespace KomodoGreetingTests
         [TestMethod]
         public void UpdateCustomer_CustomerDoesNotExist_True()
         {
-            Assert.IsFalse(repo.UpdateCustomer(-1, "first", "last", Customer.CustomerType.Past));
+            Customer newC = new Customer("first", "last", Customer.CustomerType.Past);
+            Assert.IsFalse(repo.UpdateCustomer(-1, newC));
         }
         [TestMethod]
         public void UpdateCustomer_CustomerDoesExist_True()
         {
             Customer customer = repo.GetList()[0];
-            repo.UpdateCustomer(customer.ID, "f", "l", Customer.CustomerType.Past);
+            Customer newC = new Customer("f", "l", Customer.CustomerType.Past);
+            repo.UpdateCustomer(customer.ID, newC);
             Assert.IsTrue(repo.GetCustomer(customer.ID).FullName == "f l");
         }
     }

@@ -33,7 +33,7 @@ namespace KomodoGreeting.Console
                         DoUpdateOption(toTopMainMenu, toTopCustomers);
                         break;
                     case 2:
-                        //DoRemoveOption();
+                        DoRemoveOption(toTopMainMenu, toTopCustomers);
                         break;
                     case 3:
                         System.Environment.Exit(0);
@@ -41,63 +41,6 @@ namespace KomodoGreeting.Console
                 }
             }
         }
-        //public void HoldCodeThatIMightNeed()
-        //{
-        //    string aNew = " Add new Customer";
-        //    int selection = -1;
-        //    bool loop = true;
-        //    List<Customer> _list = repo.GetList();
-        //    string h1 = "First Name";
-        //    string h2 = "Last Name";
-        //    string h3 = "Type";
-        //    string h4 = "Email";
-        //    System.Console.Write(String.Format("|{0,-12}|{1,-12}|{2,-12}|", h1, h2, h3) + h4 + "\n\n");
-        //    while (loop)
-        //    {
-        //        if (selection == -1)
-        //        {
-        //            System.Console.BackgroundColor = ConsoleColor.White;
-        //            System.Console.ForegroundColor = ConsoleColor.Black;
-        //        }
-        //        System.Console.Write(aNew + new string(' ', System.Console.WindowWidth - aNew.Length) + "\n\n");
-        //        System.Console.ResetColor();
-        //        for (int i = 0; i < _list.Count; i++)
-        //        {
-        //            Customer c = repo.GetList()[i];
-        //            if (selection == i)
-        //            {
-        //                System.Console.BackgroundColor = ConsoleColor.White;
-        //                System.Console.ForegroundColor = ConsoleColor.Black;
-        //            }
-        //            System.Console.Write(String.Format("|{0,-12}|{1,-12}|{2,-12}|", c.FirstName, c.LastName, c.Type) + PrintEmail(c.Type) + "\n\n");
-        //            System.Console.ResetColor();
-        //        }
-        //        switch (System.Console.ReadKey(true).Key)
-        //        {
-        //            case ConsoleKey.UpArrow:
-        //                if (selection > -1)
-        //                {
-        //                    selection--;
-        //                }
-        //                break;
-        //            case ConsoleKey.DownArrow:
-        //                if (selection < _list.Count - 1)
-        //                {
-        //                    selection++;
-        //                }
-        //                break;
-        //            case ConsoleKey.Escape:
-        //                System.Environment.Exit(0);
-        //                break;
-        //            case ConsoleKey.Enter:
-        //                DoMainMenu(selection);
-        //                loop = false;
-        //                break;
-        //        }
-        //        System.Console.ReadLine();
-
-        //    }
-        //}
         public void PrintTitle()
         {
             System.Console.Clear();
@@ -213,6 +156,9 @@ namespace KomodoGreeting.Console
         {
             System.Console.SetCursorPosition(0, toTopCustomers);
             Customer oldC = PickCustomer();
+            System.Console.SetCursorPosition(0, toTopMainMenu);
+            System.Console.Write(new string(' ', System.Console.WindowWidth));
+            System.Console.SetCursorPosition(0, toTopMainMenu);
             Customer newC = AskCustomer();
             ClearLine(toTopMainMenu);
             System.Console.Write(String.Format("|{0,-12}|{1,-12}|{2,-12}|", newC.FirstName, newC.LastName, newC.Type) + "  Update Customer using these details?: ");
@@ -224,20 +170,20 @@ namespace KomodoGreeting.Console
                 if (updated)
                 {
                     ClearLine(toTopMainMenu);
-                    System.Console.Write(" Customer updated successfully.");
+                    System.Console.Write(" Customer successfully updated.");
                     System.Threading.Thread.Sleep(3000);
                 }
                 else
                 {
                     ClearLine(toTopMainMenu);
-                    System.Console.Write(" Customer NOT updated.");
+                    System.Console.Write(" Customer was NOT updated.");
                     System.Threading.Thread.Sleep(3000);
                 }
             }
             else
             {
                 ClearLine(toTopMainMenu);
-                System.Console.Write(" Customer NOT updated.");
+                System.Console.Write(" Customer was NOT updated.");
                 System.Threading.Thread.Sleep(3000);
             }
         }
@@ -266,9 +212,11 @@ namespace KomodoGreeting.Console
         public Customer PickCustomer()
         {
             System.Console.CursorVisible = false;
+            int toTop = System.Console.CursorTop;
             int selection = 0;
             while (true)
             {
+                System.Console.SetCursorPosition(0, toTop);
                 PrintCustomers(selection);
                 switch (System.Console.ReadKey(true).Key)
                 {
@@ -303,20 +251,20 @@ namespace KomodoGreeting.Console
                 if (removed)
                 {
                     ClearLine(toTopMainMenu);
-                    System.Console.Write(" Customer removed successfully.");
+                    System.Console.Write(" Customer successfully removed.");
                     System.Threading.Thread.Sleep(3000);
                 }
                 else
                 {
                     ClearLine(toTopMainMenu);
-                    System.Console.Write(" Customer NOT removed.");
+                    System.Console.Write(" Customer was NOT removed.");
                     System.Threading.Thread.Sleep(3000);
                 }
             }
             else
             {
                 ClearLine(toTopMainMenu);
-                System.Console.Write(" Customer NOT removed.");
+                System.Console.Write(" Customer was NOT removed.");
                 System.Threading.Thread.Sleep(3000);
             }
         }
